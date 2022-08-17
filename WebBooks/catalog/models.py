@@ -66,10 +66,10 @@ class Book(models.Model):
         help_text='Выберите язык книги',
         verbose_name='Язык книги', null=True
     )
-    author = models.ForeignKey(
-        'Author', on_delete=models.CASCADE,
+    author = models.ManyToManyField(
+        'Author',
         help_text='Выберите автора книги',
-        verbose_name='Автор книги', null=True
+        verbose_name='Автор книги'
     )
     summary = models.TextField(
         max_length=1000,
@@ -88,6 +88,11 @@ class Book(models.Model):
     def get_absolute_url(self):
         # Возвращает URL-адрес для доступа к определенному экземпляру книги
         return reverse('book-detail', args=[str(self.id)])
+
+    def display_author(self):
+        return ', '.join([author.last_name for author in self.author.all()])
+
+    display_author.short_description = 'Авторы'
 
 
 class Status(models.Model):
@@ -127,23 +132,4 @@ class BookInstance(models.Model):
     )
 
     def __str__(self):
-        return '%s%s%s' & (self.inv_nom, self.book, self.status)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return '%s %s %s' % (self.inv_nom, self.book, self.status)
