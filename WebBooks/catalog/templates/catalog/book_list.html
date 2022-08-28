@@ -1,6 +1,6 @@
 {% extends 'base_generic.html' %}
-
 {% block content %}
+
     <h1>Список книг в БД</h1>
     {% if book_list %}
     <ul>
@@ -15,4 +15,5 @@
     {% else %}
         <p>В базе данных нет книг</p>
     {% endif %}
+
 {% endblock %}
