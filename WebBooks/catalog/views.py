@@ -2,6 +2,35 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Book, Author, BookInstance, Genre
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
+class BookListView(generic.ListView):
+    model = Book
+    paginate_by = 3
+
+
+class BookDetailView(generic.DetailView):
+    model = Book
+
+
+class AuthorListView(generic.ListView):
+    model = Author
+    paginate_by = 4
+
+
+class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
+    '''
+    Универсальный класс представления списка книг,
+    находящихся в заказе у текущего пользователя.
+    '''
+    model = BookInstance
+    template_name = 'catalog/bookinstance_list_borrowed_user.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return BookInstance.objects.filter(borrower=self.request.user)\
+            .filter(status__exact='2').order_by('due_back')
 
 
 def index(request):
@@ -23,17 +52,3 @@ def index(request):
             'num_visits': num_visits,
         }
     )
-
-
-class BookListView(generic.ListView):
-    model = Book
-    paginate_by = 3
-
-
-class BookDetailView(generic.DetailView):
-    model = Book
-
-
-class AuthorListView(generic.ListView):
-    model = Author
-    paginate_by = 4

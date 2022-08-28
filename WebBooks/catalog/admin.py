@@ -5,8 +5,7 @@ from .models import *
 # Определения к классу админимтратор
 class AuthorAdmin(admin.ModelAdmin):
     list_display = ('last_name', 'first_name', 'date_of_birth', 'date_of_death')
-    fields = ['first_name', 'last_name',
-              ('date_of_birth', 'date_of_death')]
+    fields = ['first_name', 'last_name', ('date_of_birth', 'date_of_death')]
 
 
 class BookInstanceInline(admin.TabularInline):
@@ -23,14 +22,15 @@ class BookAdmin(admin.ModelAdmin):
 
 # Регистрируем классы администратора для экземпляра книги
 @admin.register(BookInstance)
-class BookInstance(admin.ModelAdmin):
-    list_filter = ('book', 'status')
+class BookInstanceAdmin(admin.ModelAdmin):
+    list_display = ('book', 'status', 'borrower', 'due_back', 'id')
+    list_filter = ('due_back', 'status')
     fieldsets = (
         ('Экземпляр книги', {
             'fields': ('book', 'imprint', 'inv_nom')
         }),
         ('Статус и окончание его действия', {
-            'fields': ('status', 'due_back')
+            'fields': ('status', 'due_back', 'borrower')
         }),
     )
 
