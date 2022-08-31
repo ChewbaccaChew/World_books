@@ -10,8 +10,20 @@ urlpatterns = [
     path('delete/<int:pk>', views.delete, name='delete'),
     path('admin/', admin.site.urls),
     path('books/', views.BookListView.as_view(), name='books'),
-    path('books/<int:pk>', views.BookDetailView.as_view(), name='book-detail'),
+    path('book/<int:pk>', views.BookDetailView.as_view(), name='book-detail'),
     path('authors/', views.AuthorListView.as_view(), name='authors'),
+]
+
+urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
+]
+
+urlpatterns += [
     path('mybooks/', views.LoanedBooksByUserListView.as_view(), name='my-borrowed'),
+]
+
+urlpatterns += [
+    path('book/create/', views.BookCreate.as_view(), name='book_create'),
+    path('book/update/<int:pk>', views.BookUpdate.as_view, name='book_update'),
+    path('book/delete/<int:pk>', views.BookDelete.as_view, name='book_delete'),
 ]
